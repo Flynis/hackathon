@@ -1,2 +1,2 @@
-# hackaton
+# hackathon
 c# course task
