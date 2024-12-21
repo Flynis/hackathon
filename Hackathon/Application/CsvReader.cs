@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using CsvHelper.Configuration;
+using Hackathon.Model;
 
-namespace Hackathon.Domain;
+namespace Hackathon.Application;
 
 public class CsvReader
 {
@@ -27,12 +28,7 @@ public class CsvReader
             var records = csv.GetRecords<CsvRecord>();
             foreach (var record in records)
             {
-                var dev = new Developer
-                {
-                    Id = record.Id,
-                    Name = record.Name,
-                    Job = job
-                };
+                var dev = new Developer(record.Id, record.Name, job);
                 result.Add(dev);
             }
         }

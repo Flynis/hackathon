@@ -1,16 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Hackathon.Domain;
+﻿namespace Hackathon.Model;
 
 public class Developer
 {
-    public required int Id { get; init; }
-    public required string Name { get; init; }
-    public required Jobs Job { get; init; }
+    public int Id { get; private set; }
+    public string Name { get; private set; }
+    public Jobs Job { get; private set; }
 
-    public Developer() { }
-
-    [SetsRequiredMembers]
     public Developer(int id, string name, Jobs job) 
     {
         Id = id;

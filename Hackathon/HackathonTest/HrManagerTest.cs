@@ -1,57 +1,67 @@
 using NUnit.Framework;
-using Hackathon.Domain;
+using Hackathon.Model;
 using Moq;
+using Hackathon.Application;
 
 namespace HackathonTest;
 
 public class HrManagerTest
 {
-    private Mock<ITeamBuildingStrategy> _strategyMock = new Mock<ITeamBuildingStrategy>();
-
     [Test]
     public void TestCorrectTeamlistSize()
     {
+        // Arrange
         var juniors = new List<Developer>();
         var teamleads = new List<Developer>();
         for (int i = 0; i < 10; i++)
         {
-            juniors.Add(new Developer(i, "", Jobs.Junior));
-            teamleads.Add(new Developer(i, "", Jobs.Teamlead));
+            juniors.Add(new Developer(i, "Junior", Jobs.Junior));
+            teamleads.Add(new Developer(i, "Teamlead", Jobs.Teamlead));
         }
 
+        // Act
         var hackathon = new HackathonEvent();
-
         var wishlists = hackathon.HoldEvent(juniors, teamleads);
-
         var result = new HrManager(new OnlyJuniorWishTeamBuildingStrategy()).BuildTeams(wishlists);
-        
+
+        // Assert
         Assert.That(result.Count * 2, Is.EqualTo(wishlists.Count));
     }
     
     [Test]
     public void TestCorrectStrategyResult()
     {
-        var junior = new Developer(1, "", Jobs.Junior);
-        var teamlead = new Developer(2, "", Jobs.Teamlead);
-        
-        var wishlists = new List<Wishlist>() { new Wishlist(junior, new []{teamlead}), new Wishlist( teamlead, new [] {junior}) };
+        // Arrange
+        var junior = new Developer(1, "Junior", Jobs.Junior);
+        var teamlead = new Developer(2, "Teamlead", Jobs.Teamlead);
+        var juniorWishList = new Wishlist(junior, [teamlead]);
+        var teamleadWishlist = new Wishlist(teamlead, [junior]);
+        var wishlists = new List<Wishlist>() { juniorWishList, teamleadWishlist };
 
+        // Act
         var result = new HrManager(new OnlyJuniorWishTeamBuildingStrategy()).BuildTeams(wishlists);
-        
+
+        // Assert
         Assert.That(result[0], Is.EqualTo(new Team(junior, teamlead)));
     }
     
     [Test]
     public void TestStrategyInvokedOnce()
     {
-        var junior = new Developer(1, "", Jobs.Junior);
-        var teamlead = new Developer(2, "", Jobs.Teamlead);
-        
-        var wishlists = new List<Wishlist>() { new Wishlist(junior, new []{teamlead}), new Wishlist( teamlead, new [] {junior}) };
-        _strategyMock.Setup(s => s.BuildTeams(wishlists)).Returns(new List<Team>());
-        
-        var result = new HrManager(_strategyMock.Object).BuildTeams(wishlists);
-        
-        _strategyMock.Verify(mock => mock.BuildTeams(wishlists), Times.Once());
+        // Arrange
+        var junior = new Developer(1, "Junior", Jobs.Junior);
+        var teamlead = new Developer(2, "Teamlead", Jobs.Teamlead);
+        var juniorWishList = new Wishlist(junior, [teamlead]);
+        var teamleadWishlist = new Wishlist(teamlead, [junior]);
+        var wishlists = new List<Wishlist>() { juniorWishList, teamleadWishlist };
+
+        var strategyMock = new Mock<ITeamBuildingStrategy>();
+        strategyMock.Setup(s => s.BuildTeams(new List<Wishlist>())).Returns([]);
+
+        // Act
+        var result = new HrManager(strategyMock.Object).BuildTeams(wishlists);
+
+        // Assert
+        strategyMock.Verify(mock => mock.BuildTeams(wishlists), Times.Once());
     }
 }

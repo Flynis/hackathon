@@ -1,15 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Hackathon.Domain;
+﻿namespace Hackathon.Model;
 
 public record Team
 {
-    public required Developer Junior { get; init; }
-    public required Developer Teamlead { get; init; }
+    public Developer Junior { get; private set; }
+    public Developer Teamlead { get; private set; }
 
-    public Team() { }
-
-    [SetsRequiredMembers]
     public Team(Developer junior, Developer teamlead)
     {
         Junior = junior;

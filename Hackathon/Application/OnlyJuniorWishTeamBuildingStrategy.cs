@@ -1,4 +1,6 @@
-﻿namespace Hackathon.Domain;
+﻿using Hackathon.Model;
+
+namespace Hackathon.Application;
 
 public class OnlyJuniorWishTeamBuildingStrategy : ITeamBuildingStrategy
 {
@@ -9,20 +11,20 @@ public class OnlyJuniorWishTeamBuildingStrategy : ITeamBuildingStrategy
 
         foreach (Wishlist wishlist in wishlists)
         {
-            Developer owner = wishlist.Owner;
+            var owner = wishlist.Owner;
             if (owner.Job != Jobs.Junior)
             {
                 continue;
             }
 
             var teamleadIndex = 0;
-            Developer[] priorities = wishlist.Priorities;
+            var priorities = wishlist.Priorities;
             while (chosenTeamleads.Contains(priorities[teamleadIndex]))
             {
                 teamleadIndex++;
             }
 
-            Developer teamlead = priorities[teamleadIndex];
+            var teamlead = priorities[teamleadIndex];
             chosenTeamleads.Add(teamlead);
 
             teams.Add(new Team(owner, teamlead));

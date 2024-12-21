@@ -1,4 +1,6 @@
-﻿namespace Hackathon.Domain;
+﻿using Hackathon.Model;
+
+namespace Hackathon.Application;
 
 public class HrDirector
 {
@@ -15,7 +17,7 @@ public class HrDirector
     {
         var harmonyIndexes = new int[wishlists.Count];
 
-        for (int i = 0; i < teams.Count; i++)
+        for (var i = 0; i < teams.Count; i++)
         {
             Team team = teams[i];
             harmonyIndexes[i * 2] = GetHarmonyIndex(team.Junior, team.Teamlead, _teamleadsCount, wishlists);
@@ -28,7 +30,7 @@ public class HrDirector
     private int GetHarmonyIndex(Developer dev, Developer teammate, int teammatesCount, List<Wishlist> wishlists)
     {
         Wishlist? wishlist = wishlists.Find(w => w.Owner.Id == dev.Id);
-        int teammateIndex = Array.IndexOf(wishlist.Priorities, teammate);
+        var teammateIndex = Array.IndexOf(wishlist.Priorities, teammate);
         return teammatesCount - teammateIndex;
     }
 }

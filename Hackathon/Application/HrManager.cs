@@ -1,4 +1,6 @@
-﻿namespace Hackathon.Domain;
+﻿using Hackathon.Model;
+
+namespace Hackathon.Application;
 
 public class HrManager
 {

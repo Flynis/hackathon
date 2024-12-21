@@ -1,4 +1,4 @@
-﻿namespace Hackathon.Domain;
+﻿namespace Hackathon.Application;
 
 public class Math
 {
